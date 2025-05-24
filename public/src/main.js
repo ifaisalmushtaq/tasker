@@ -1,4 +1,4 @@
-import { addBtnFn, taskFn } from "./shared";
+import { addBtnFn, taskFn } from "./sharedr";
 
 let addBtn = document.querySelector("#add-btn")
 // let flag = 0; //modal not on screen
