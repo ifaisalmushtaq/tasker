@@ -1,0 +1,213 @@
+@import url('https://fonts.googleapis.com/css2?family=Playwrite+MX+Guides&family=Raleway+Dots&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Doto:wght@100..900&display=swap');
+
+* {
+    margin: 0;
+    padding: 0; 
+}
+
+body {
+    background-color: rgb(10, 10, 10);
+    color: aliceblue;
+    font-family: Roboto;
+}
+
+nav ul {
+    display:flex;
+    justify-content: space-between;
+    list-style-type: none;
+    margin: 1rem;
+}
+
+#menu div {
+    height: 2px;
+    background-color: aliceblue;
+    width: 26px;
+    margin-top: 5px;
+}
+
+
+#logo {
+    font-family: "Doto", sans-serif;
+    font-optical-sizing: auto;
+    font-size: 25px;
+    font-weight: 700;
+    font-variation-settings:
+        "ROND" 0;
+}
+
+.login-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80vh;
+    width: 100%;
+    overflow: hidden;
+    /* overflow: scroll; */
+}
+
+.login-wrapper .login-form{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    /* overflow: scroll; */
+}
+
+.login-form input {
+    margin: 0.5rem;
+    padding: 0.5rem;
+    height: 1.5rem;
+    width: 14rem;
+    border-radius: 3px 3px 0 0;
+    background-color: rgb(92, 92, 92);
+    color: beige;
+    border: 3px solid rgb(255, 255, 255);
+    font-size: 14px;
+    border-top: 0;
+    border-left: 0;
+    border-right: 0;
+}
+
+.login-form input::placeholder {
+    position:relative;
+    font-size: 14px;
+    top: -1px;
+    color: rgb(158, 158, 140);
+}
+
+.login-form input:focus {
+    outline: none;
+    box-shadow: none;
+    border-bottom: 2px solid rgb(62, 59, 233);
+    border-top: 0;
+    border-left: 0;
+    border-right: 0;
+}
+
+#password {
+    margin-bottom: 0.2rem;
+}
+
+a {
+    position: relative;
+    margin-left: auto;
+    padding-right: 0.6rem;
+    font-size: 12px;
+    text-decoration: none;
+    color: rgb(201, 198, 198);
+}
+
+a:hover, a:active {
+    text-decoration: underline;
+}
+
+.login-form button {
+    display: block;
+    margin: 0.5rem;
+    margin-bottom: 0.2rem;
+    padding: 0.5rem;
+    height: 2.2rem;
+    width: 15rem;
+    border-radius: 3px;
+    background-color: rgb(92, 92, 92);
+    color: rgb(255, 255, 255);
+    font-size: 14px;
+    border: 1px solid  rgb(92, 92, 92);
+}
+
+.no-account {
+    font-size: 12px;
+    margin-left: auto;
+    margin-right: 0rem;
+    color: rgb(240, 238, 238);
+}
+
+/* The Menu Modal starts From Here */
+/* ################################# */
+
+.menu-modal {
+    position: absolute;
+    display: flex;
+    flex-direction: row;
+    height:100vh;
+    width:100vw;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+}
+
+.blur {
+    height:100vh;
+    width:60vw;
+    background-color: rgba(15, 15, 15, 0.829);
+    border-right: 0.2px solid rgba(91, 187, 216, 0.568);
+}
+
+.menu-toolbar {
+    height:100vh;
+    width:40vw;
+    margin-right: ;
+    border-left: 0.2px solid rgba(255, 255, 255, 0.418);
+    background-color: rgb(0, 0, 0);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.menu-list {
+    padding: 0.5rem;
+    margin: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    list-style-type: none;
+}
+
+menu a {
+    position: relative;
+    margin-left: auto;
+    padding-right: 0.6rem;
+    font-size: 15px;
+    text-decoration: none;
+    color: rgb(201, 198, 198);
+}
+
+menu a:hover, menu a:active {
+    text-decoration: underline;
+}
+
+.menu-list li {
+    padding: 0.4rem 0rem 0.4rem 0rem;
+}
+
+.menu-toolbar .au {
+    padding: 0.3rem;
+    margin: 0 0rem 1rem 0rem;
+    width: 5rem;
+    border-radius: 3px;
+    background-color: rgb(92, 92, 92);
+    color: rgb(255, 255, 255);
+    border: 1px solid  rgb(92, 92, 92);
+}
+
+/* .menu-toolbar button {
+    margin-left: auto;
+    margin: 1rem 1rem 0 auto;
+    font-size: 18px;
+    border: 0px solid rgb(0, 0, 0);
+    background-color: rgb(0, 0, 0);
+    color: white;
+    font-weight: 600;
+} */
+
+#signup-m {
+    margin-top: 4rem;
+    text-align: center;
+}
+
+.hidden-menu {
+    display: none;
+}
+
+/* The Menu Modal Ends Here */
+/* ################################# */

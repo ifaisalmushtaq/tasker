@@ -1,16 +1,16 @@
-import { addBtnFn, taskFn } from "./eventhandlerfn";
+import { addBtnFn, taskFn } from "./shared";
 
 let addBtn = document.querySelector("#add-btn")
-let flag = 0; //modal not on screen
-let taskFlag = 0;
+// let flag = 0; //modal not on screen
+// let taskFlag = 0;
 
-function setFlag() {
-    return ++flag;
-}
+// function setFlag() {
+//     return ++flag;
+// }
 
-function setTaskFlag() {
-    return ++taskFlag;
-}
+// function setTaskFlag() {
+//     return ++taskFlag;
+// }
 
 displayTasks();
 
@@ -78,8 +78,6 @@ function createTaskOverviewElement(task, item, sectionTask) {
 }
 
 export {
-    setFlag,
-    setTaskFlag,
     changeInput,
     displayTasks,
     addFormData,
