@@ -1,15 +1,15 @@
-let flag = 0; //modal not on screen
-let taskFlag = 0;
+// let flag = 0; //modal not on screen
+// let taskFlag = 0;
 
-function setFlag() {
-    return ++flag;
-}
+// function setFlag() {
+//     return ++flag;
+// }
 
-function setTaskFlag() {
-    return ++taskFlag;
-}
+// function setTaskFlag() {
+//     return ++taskFlag;
+// }
 
-export {
-    setFlag,
-    setTaskFlag
-}
+// export {
+//     setFlag,
+//     setTaskFlag
+// }

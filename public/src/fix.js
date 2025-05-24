@@ -1,6 +1,15 @@
-import { setFlag, setTaskFlag } from "./flag";
-import { createModal, toggleClass, createTaskModal, setTaskModal } from "./uiFns";
+// import { setFlag, setTaskFlag } from "./flag";
+// import { createModal, toggleClass, createTaskModal, setTaskModal } from "./uiFns";
+let flag = 0; //modal not on screen
+let taskFlag = 0;
 
+function setFlag() {
+    return ++flag;
+}
+
+function setTaskFlag() {
+    return ++taskFlag;
+}
 
 function addBtnFn(e) {
     let flag = setFlag();
@@ -259,9 +268,7 @@ function backFn(e) {
     document.querySelectorAll(".other")[0].classList.toggle("task-hidden");
     document.querySelectorAll(".other")[1].classList.toggle("task-hidden");
     document.querySelector("#task").classList.toggle("task-hidden");
-    // taskDetails = null;
 }
-
 
 export {
     addBtnFn,
