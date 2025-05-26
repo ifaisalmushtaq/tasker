@@ -3,6 +3,7 @@ addBtn.addEventListener("click", addBtnFn)
 
 let flag = 0;
 let popStateFlag = false
+let taskLeftColumnFlag = true;
 let quill = null
 
 let taskDetails = {
@@ -31,19 +32,11 @@ function repositionToolbar() {
 
 }
 
-function changeInput(taskDetails = "") {
-    if (taskDetails) {
-        document.querySelectorAll("input")[0].value = taskDetails.title;
-        // document.querySelectorAll("textarea")[0].value = taskDetails.description;
-        document.querySelectorAll("input")[1].value = taskDetails.expiryDate;
-        document.querySelectorAll("input")[2].value = taskDetails.priorty;
-
-    } else {
-        document.querySelectorAll("input")[0].value = "";
-        // document.querySelectorAll("textarea")[0].value = "";
-        document.querySelectorAll("input")[1].value = "";
-        document.querySelectorAll("input")[2].value = "";
-    }
+function changeInput() {
+    document.querySelectorAll("input")[0].value = "";
+    quill.deleteText(0, quill.getLength());
+    document.querySelectorAll("input")[1].value = "";
+    document.querySelectorAll("input")[2].value = "";
 }
 
 function addFormData(checkOp, taskDetails) {
@@ -52,6 +45,11 @@ function addFormData(checkOp, taskDetails) {
     if (checkOp == "add") {
         formData.title = document.querySelector("#title").value
         formData.description = quill.getSemanticHTML(0, quill.getLength());
+
+        if (!formData.title && formData.description == "<p></p>") {
+            return null
+        }
+
         //formData.expiryDate = document.querySelectorAll("input")[1].value
         //formData.priorty = document.querySelectorAll("input")[2].value
         formData.date = new Date();
@@ -72,18 +70,19 @@ function addFormData(checkOp, taskDetails) {
 
 function displayTasks() {
     let tasks = JSON.parse(localStorage.getItem("data"));
-    let task = null;
-    let sectionTask = document.querySelector("#task");
 
     if (tasks != null) {
         tasks.forEach(item => {
-            createTaskOverviewElement(task, item, sectionTask);
+            createTaskOverviewElement(item);
         });
     }
 }
 
-function createTaskOverviewElement(task, item, sectionTask) {
-    task = document.createElement("article");
+function createTaskOverviewElement(item) {
+    let taskLeft = document.querySelector("#task-left");
+    let taskRight = document.querySelector("#task-right");
+
+    let task = document.createElement("article");
     task.className = "task";
     task.taskId = item.id;
     task.id = item.id;
@@ -95,27 +94,22 @@ function createTaskOverviewElement(task, item, sectionTask) {
     taskDescription.innerHTML = item.description
     taskDescription = taskDescription.textContent
 
-    console.log(taskDescription)
-
     para.textContent = taskDescription.length > 400 ? taskDescription.slice(0, 399) + " ..." : taskDescription;
     title.textContent = item.title.length > 50 ? item.title.slice(0, 50) + " ___" : item.title
 
     task.appendChild(title)
     task.appendChild(para)
-    sectionTask.appendChild(task);
+    if (taskLeftColumnFlag) {
+        taskLeft.prepend(task);
+        taskLeftColumnFlag = !taskLeftColumnFlag
+    } else {
+        taskRight.prepend(task);
+        taskLeftColumnFlag = !taskLeftColumnFlag
+    }
     task.addEventListener("click", taskFn)
 }
 
 function addBtnFn(e) {
-    // history.pushState({}, "", "/main.html");
-    // popStateFlag = true;
-    // window.addEventListener("popstate", () => {
-    //     if (popStateFlag == true) {
-    //         toggleClass();
-    //         changeInput();
-    //     }
-    // })
-
     flag = setFlag();
 
     if (flag === 1) {
@@ -123,6 +117,7 @@ function addBtnFn(e) {
     }
     window.visualViewport.addEventListener('resize', repositionToolbar);
     window.visualViewport.addEventListener('scroll', repositionToolbar);
+
     document.querySelector("#submit").opVal = "add"
 
     toggleClass();
@@ -139,6 +134,21 @@ function taskFn(e) {
 
     setModal(taskDetails);
     toggleClass();
+
+    document.querySelector("#submit").opVal = "edit"
+    
+    const title = document.querySelector("#title")
+    const editor = document.querySelector(".ql-editor")
+    title.readOnly = true;
+    editor.contentEditable = false;
+
+    title.addEventListener("click", inputEditable);
+    editor.addEventListener("click", inputEditable);
+
+    function inputEditable() {
+        title.readOnly = false;
+        editor.contentEditable = true;
+    }
 }
 
 function createModal() {
@@ -238,7 +248,7 @@ function createModal() {
     cancel.type = "button";
     cancel.innerHTML = `<span class="material-symbols-outlined cancel">arrow_back_ios </span>`;
     cancel.id = "cancel";
-    cancel.addEventListener("click", cancelFn);
+    cancel.addEventListener("click", submitFn);
 
     let finalLastWrapper = document.createElement("div");
     finalLastWrapper.className = "final-last-wrapper";
@@ -353,6 +363,13 @@ function submitFn(e) {
 
     let checkOp = document.querySelector("#submit").opVal;
     let formInputData = addFormData(checkOp, taskDetails);
+
+    if (!formInputData) {
+        toggleClass();
+        changeInput();
+        return;
+    }
+
     let data = JSON.parse(localStorage.getItem("data")) || [];
 
     if (checkOp == "add") {
@@ -365,18 +382,15 @@ function submitFn(e) {
         localStorage.setItem("data", JSON.stringify(data));
     }
 
-    let task = null;
-    createTaskOverviewElement(task, formInputData, document.querySelector("#task"))
+    createTaskOverviewElement(formInputData)
     toggleClass();
     changeInput();
-
-    popStateFlag = false;
 }
 
-function cancelFn(e) {
-    e.preventDefault();
-    toggleClass();
-    changeInput();
-    popStateFlag = false;
-}
+// function cancelFn(e) {
+//     e.preventDefault();
+//     toggleClass();
+//     changeInput();
+
+// }
 
