@@ -1,31 +1,46 @@
-// import { addBtnFn, taskFn } from "./fix";
-
 let addBtn = document.querySelector("#add-btn")
-// let flag = 0; //modal not on screen
-// let taskFlag = 0;
+addBtn.addEventListener("click", addBtnFn)
 
-// function setFlag() {
-//     return ++flag;
-// }
+let flag = 0;
+let popStateFlag = false
+let quill = null
 
-// function setTaskFlag() {
-//     return ++taskFlag;
-// }
+let taskDetails = {
+    title: null,
+    description: null,
+    expiryDate: null,
+    date: null,
+    editDate: null,
+    priority: null,
+    id: null
+};
+
+function setFlag() {
+    return ++flag;
+}
 
 displayTasks();
 
-addBtn.addEventListener("click", addBtnFn)
+function repositionToolbar() {
+    const toolbar = document.querySelector(".final-outer-wrapper");
+    const keyboardHeight = window.innerHeight - window.visualViewport.height - window.visualViewport.offsetTop;
+    // alert(`${window.innerHeight}, ${window.visualViewport.height}, ${window.visualViewport.offsetTop}`)
+    // If keyboard is open, move toolbar up
+
+    toolbar.style.bottom = keyboardHeight + 'px';
+
+}
 
 function changeInput(taskDetails = "") {
     if (taskDetails) {
         document.querySelectorAll("input")[0].value = taskDetails.title;
-        document.querySelectorAll("textarea")[0].value = taskDetails.description;
+        // document.querySelectorAll("textarea")[0].value = taskDetails.description;
         document.querySelectorAll("input")[1].value = taskDetails.expiryDate;
         document.querySelectorAll("input")[2].value = taskDetails.priorty;
 
     } else {
         document.querySelectorAll("input")[0].value = "";
-        document.querySelectorAll("textarea")[0].value = "";
+        // document.querySelectorAll("textarea")[0].value = "";
         document.querySelectorAll("input")[1].value = "";
         document.querySelectorAll("input")[2].value = "";
     }
@@ -35,18 +50,18 @@ function addFormData(checkOp, taskDetails) {
     let formData = {}
 
     if (checkOp == "add") {
-        formData.title = document.querySelectorAll("input")[0].value
-        formData.description = document.querySelectorAll("textarea")[0].value
-        formData.expiryDate = document.querySelectorAll("input")[1].value
-        formData.priorty = document.querySelectorAll("input")[2].value
+        formData.title = document.querySelector("#title").value
+        formData.description = quill.getSemanticHTML(0, quill.getLength());
+        //formData.expiryDate = document.querySelectorAll("input")[1].value
+        //formData.priorty = document.querySelectorAll("input")[2].value
         formData.date = new Date();
         formData.id = Date.now();
         formData.editDate = null;
     } else {
-        formData.title = document.querySelectorAll("input")[0].value
-        formData.description = document.querySelectorAll("textarea")[0].value
-        formData.expiryDate = document.querySelectorAll("input")[1].value
-        formData.priorty = document.querySelectorAll("input")[2].value
+        formData.title = document.querySelector("#title").value
+        formData.description = quill.getSemanticHTML(0, quill.getLength());
+        //formData.expiryDate = document.querySelectorAll("input")[1].value
+        //formData.priorty = document.querySelectorAll("input")[2].value
         formData.date = taskDetails.date;
         formData.id = taskDetails.id;
         formData.editDate = new Date();
@@ -70,114 +85,245 @@ function displayTasks() {
 function createTaskOverviewElement(task, item, sectionTask) {
     task = document.createElement("article");
     task.className = "task";
-    task.textContent = item.description.length > 400 ? item.description.slice(0, 399) + " ..." : item.description;
     task.taskId = item.id;
     task.id = item.id;
+
+    let para = document.createElement("p");
+    let title = document.createElement("h4");
+
+    let taskDescription = document.createElement("div");
+    taskDescription.innerHTML = item.description
+    taskDescription = taskDescription.textContent
+
+    console.log(taskDescription)
+
+    para.textContent = taskDescription.length > 400 ? taskDescription.slice(0, 399) + " ..." : taskDescription;
+    title.textContent = item.title.length > 50 ? item.title.slice(0, 50) + " ___" : item.title
+
+    task.appendChild(title)
+    task.appendChild(para)
     sectionTask.appendChild(task);
     task.addEventListener("click", taskFn)
 }
 
-// import { setFlag, setTaskFlag } from "./flag";
-// import { createModal, toggleClass, createTaskModal, setTaskModal } from "./uiFns";
-let flag = 0; //modal not on screen
-let taskFlag = 0;
-
-function setFlag() {
-    return ++flag;
-}
-
-function setTaskFlag() {
-    return ++taskFlag;
-}
-
 function addBtnFn(e) {
-    let flag = setFlag();
+    // history.pushState({}, "", "/main.html");
+    // popStateFlag = true;
+    // window.addEventListener("popstate", () => {
+    //     if (popStateFlag == true) {
+    //         toggleClass();
+    //         changeInput();
+    //     }
+    // })
 
-    if (flag === 1) {  //flag == 1 means modal already created
+    flag = setFlag();
+
+    if (flag === 1) {
         createModal();
     }
-
-    document.querySelector("#form-heading").textContent = "Add a new task"
-    document.querySelector("#submit").textContent = "Add Task"
+    window.visualViewport.addEventListener('resize', repositionToolbar);
+    window.visualViewport.addEventListener('scroll', repositionToolbar);
     document.querySelector("#submit").opVal = "add"
 
     toggleClass();
 }
 
 function taskFn(e) {
-    let taskId = e.srcElement.taskId;
+    let taskId = e.currentTarget.taskId;
     taskDetails = JSON.parse(localStorage.getItem("data")).find((item) => item.id === taskId);
 
-    let taskFlag = setTaskFlag();
-    if (taskFlag == 1) {
-        createTaskModal()
+    let flag = setFlag();
+    if (flag == 1) {
+        createModal()
     }
 
-    setTaskModal(taskDetails);
-    document.querySelector("#task-display-modal").classList.toggle("task-hidden");
-    document.querySelectorAll(".other")[0].classList.toggle("task-hidden");
-    document.querySelectorAll(".other")[1].classList.toggle("task-hidden");
-    document.querySelector("#task").classList.toggle("task-hidden");
+    setModal(taskDetails);
+    toggleClass();
 }
 
-//#############################
-//############uiFns.js###################
-
-function createModal (){
+function createModal() {
     let modal = document.createElement("div");
     modal.className = "modal-inner"
-
-    let heading = document.createElement("h1");
-    heading.textContent = "Add Your Task";
-    heading.id = "form-heading"
 
     let form = document.createElement("form");
     form.className = "modal-form"
     form.id = "form"
     form.addEventListener("submit", submitFn);
 
+    let InputWrapper = document.createElement("div");
+    InputWrapper.className = "wrapper-top-1"
+
+    let InputWrapper2 = document.createElement("div");
+    InputWrapper2.className = "wrapper-top-2"
+    InputWrapper.appendChild(InputWrapper2)
+
     let inputName = document.createElement("input");
-    inputName.type= "text"
+    inputName.type = "text"
+    inputName.id = "title"
     inputName.required = true
     inputName.placeholder = "Title"
 
-    let inputDescription = document.createElement("textarea")
-    inputDescription.placeholder = "Appointment with Doctor..."
-    inputDescription.required = true;
+    const editorDiv = document.createElement('div');
+    editorDiv.id = 'editor';
+
+    let mainWrapper = document.createElement("div");
+    mainWrapper.className = "main-wrapper";
+
+    const copyBtn = document.createElement("button");
+    copyBtn.type = "button"
+    copyBtn.id = "copy-btn"
+    copyBtn.className = "copy-btn"
+    copyBtn.innerHTML = `<span class="material-symbols-outlined">content_copy</span>`
+    copyBtn.addEventListener("click", (e) => {
+        const html = `<h1>${inputName.value}</h1> ${quill.getSemanticHTML(0, quill.getLength())}`
+        const text = `${inputName.value} ${quill.getText(0, quill.getLength())}`
+
+        const blobInput = new ClipboardItem({
+            "text/html": new Blob([html], { type: "text/html" }),
+            "text/plain": new Blob([text], { type: "text/plain" })
+        });
+
+        navigator.clipboard.write([blobInput])
+            .then(() => {
+                console.log('Text copied to clipboard');
+            })
+            .catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+    })
 
     let inputDate = document.createElement("input");
     inputDate.type = "date"
-    inputDate.required = true
+    inputDate.id = "date"
+
+    const inputDateBtn = document.createElement("button");
+    inputDateBtn.type = "button"
+    inputDateBtn.id = "date-btn"
+    inputDateBtn.className = "date-btn"
+    inputDateBtn.innerHTML = `<span class="material-symbols-outlined">event</span>`
+    inputDateBtn.appendChild(inputDate);
+    inputDateBtn.addEventListener("click", () => {
+        inputDate.click();
+    })
 
     let priorty = document.createElement("input");
     priorty.type = "number";
     priorty.min = 1;
+    priorty.id = "priorty"
     priorty.placeholder = "Priorty"
-    priorty.required = true;
+
+    const inputPriortyBtn = document.createElement("button");
+    inputPriortyBtn.type = "button"
+    inputPriortyBtn.id = "priorty-btn"
+    inputPriortyBtn.className = "priorty-btn"
+    inputPriortyBtn.innerHTML = `<span class="material-symbols-outlined priorty-btn">low_priority</span>`
+    inputPriortyBtn.appendChild(priorty);
+    inputPriortyBtn.addEventListener("click", () => {
+        //
+    })
+
+    let priortyDateWrapper = document.createElement("div");
+    priortyDateWrapper.className = "priorty-date-wrapper";
+
+    priortyDateWrapper.appendChild(copyBtn)
+    priortyDateWrapper.appendChild(inputDateBtn)
+    priortyDateWrapper.appendChild(inputPriortyBtn)
 
     let submit = document.createElement("button");
     submit.type = "submit";
-    submit.textContent = "Add Task";
+    submit.innerHTML = `<span class="material-symbols-outlined save">save</span>`;
     submit.id = "submit";
-        
+
     let cancel = document.createElement("button");
     cancel.type = "button";
-    cancel.textContent = "Cancel";
+    cancel.innerHTML = `<span class="material-symbols-outlined cancel">arrow_back_ios </span>`;
     cancel.id = "cancel";
     cancel.addEventListener("click", cancelFn);
 
-    document.querySelector("#modal").appendChild(modal)
-    modal.appendChild(heading)
-    modal.appendChild(form)
-    form.appendChild(inputName)
-    form.appendChild(inputDescription)
-    form.appendChild(inputDate)
-    form.appendChild(priorty)
-    form.appendChild(submit)
-    form.appendChild(cancel)
+    let finalLastWrapper = document.createElement("div");
+    finalLastWrapper.className = "final-last-wrapper";
+    finalLastWrapper.id = "quill-toolbar";
+    finalLastWrapper.innerHTML = `
+  <span class="ql-formats">
+    <button class="ql-bold"></button>
+    <button class="ql-italic"></button>
+    <button class="ql-underline"></button>
+  </span>
+  <span class="ql-formats">
+    <button class="ql-list" value="ordered"></button>
+    <button class="ql-list" value="bullet"></button>
+  </span>
+  <span class="ql-formats">
+    <button class="ql-link"></button>
+    <button class="ql-code-block"></button>
+  </span>
+`;
+
+    document.querySelector("#modal").appendChild(modal);
+    modal.appendChild(form);
+    form.appendChild(InputWrapper);
+    form.appendChild(mainWrapper);
+    mainWrapper.appendChild(inputName);
+    mainWrapper.appendChild(editorDiv);
+    InputWrapper2.appendChild(cancel)
+    InputWrapper2.appendChild(priortyDateWrapper);
+
+    quill = new Quill(editorDiv, {
+        theme: 'snow',
+        placeholder: "Note",
+        modules: {
+            toolbar: {
+                container: finalLastWrapper
+            },
+            history: {
+                delay: 2500,
+                userOnly: true
+            },
+            clipboard: {
+                matchers: []
+            }
+        }
+    });
+
+    let lastWrapper = document.createElement("div");
+    lastWrapper.className = "last-wrapper";
+
+    let moreBtn = document.createElement("button");
+    moreBtn.innerHTML = `<span class="material-symbols-outlined more">more_vert</span>`
+    moreBtn.type = "button"
+
+    let undoBtn = document.createElement("button");
+    undoBtn.innerHTML = `<span class="material-symbols-outlined undo">undo</span>`
+    undoBtn.type = "button"
+
+    let redoBtn = document.createElement("button");
+    redoBtn.innerHTML = `<span class="material-symbols-outlined redo">redo</span>`
+    redoBtn.type = "button"
+
+    let finalOuterWrapper = document.createElement("div");
+    finalOuterWrapper.className = "final-outer-wrapper";
+
+    finalOuterWrapper.appendChild(finalLastWrapper);
+    finalOuterWrapper.appendChild(lastWrapper);
+
+    lastWrapper.appendChild(undoBtn);
+    lastWrapper.appendChild(redoBtn);
+    lastWrapper.appendChild(submit);
+    lastWrapper.appendChild(moreBtn);
+
+    form.appendChild(finalOuterWrapper);
+
+    redoBtn.addEventListener("click", () => {
+        quill.history.redo()
+    })
+
+    undoBtn.addEventListener("click", () => {
+        quill.history.undo()
+    })
+
 }
 
-function toggleClass () {
+function toggleClass() {
     document.querySelectorAll(".other")[0].classList.toggle("task-hidden");
     document.querySelectorAll(".other")[1].classList.toggle("task-hidden");
     document.querySelector("#modal").classList.toggle("task-hidden");
@@ -185,102 +331,28 @@ function toggleClass () {
     document.querySelector("#task").classList.toggle("task-hidden");
 }
 
-function createTaskModal () {
-    let modal = document.createElement("div");
-    modal.className = "modal-inner-task"
+function setModal(taskDetails) {
+    let title = document.querySelector("#title");
+    title.value = taskDetails.title;
 
-    let heading = document.createElement("h1");
-    heading.id = "task-heading"
-    let creationDate = document.createElement("span");
-    creationDate.id = "task-creation-date"
-    let para = document.createElement("p");
-    para.id = "task-para"
+    // let creationDate = document.getElementById("task-creation-date");
+    // let date = new Date(taskDetails.date)
+    // creationDate.textContent = date.toUTCString();
 
-    let wrapper = document.createElement("div");
-    wrapper.className = "exp-wrapper"
+    quill.clipboard.dangerouslyPasteHTML(taskDetails.description);
 
-    let expiryDate = document.createElement("span");
-    expiryDate.id = "task-expiry"
-    
-    let priorty = document.createElement("span");
-    priorty.id = "task-priorty"
+    // let expiryDate = document.getElementById("task-expiry");
+    // expiryDate.innerHTML = `<span class="h">Deadline:</span> <span class="dl"> ${taskDetails.expiryDate} </span>`;
 
-    let btnWrapper = document.createElement("div");
-    wrapper.className = "btn-wrapper"
-
-    let edit = document.createElement("button");
-    edit.type = "button";
-    edit.innerHTML = `Edit`;
-    edit.id = "edit";
-    edit.addEventListener("click", editTaskFn);
-
-    let back = document.createElement("button");
-    back.type = "button";
-    back.textContent = "Back";
-    back.id = "back";
-    back.addEventListener("click", backFn);
-
-    document.querySelector("#task-display-modal").appendChild(modal)
-    modal.appendChild(heading)
-    modal.appendChild(creationDate)
-    modal.appendChild(para)
-    modal.appendChild(wrapper)
-    wrapper.appendChild(expiryDate)
-    wrapper.appendChild(priorty)
-    modal.appendChild(btnWrapper)
-    btnWrapper.appendChild(edit)
-    btnWrapper.appendChild(back)
+    // let priorty = document.getElementById("task-priorty");
+    // priorty.innerHTML = `<span class="h">Priority:</span> <span class="dl"> ${taskDetails.priorty}</span>`;
 }
-
-function setTaskModal(taskDetails) {
-    let heading = document.getElementById("task-heading");
-    heading.textContent = taskDetails.title;
-
-    let creationDate = document.getElementById("task-creation-date");
-    let date = new Date(taskDetails.date)
-    creationDate.textContent = date.toUTCString();
-
-    let para = document.getElementById("task-para");
-    para.textContent = taskDetails.description;
-
-    let expiryDate = document.getElementById("task-expiry");
-    expiryDate.innerHTML = `<span class="h">Deadline:</span> <span class="dl"> ${taskDetails.expiryDate} </span>`;
-
-    let priorty = document.getElementById("task-priorty");
-    priorty.innerHTML = `<span class="h">Priority:</span> <span class="dl"> ${taskDetails.priorty}</span>`;
-}
-
-let taskDetails = {
-    title: null,
-    description: null,
-    expiryDate: null,
-    date: null,
-    editDate: null,
-    priority: null,
-    id: null
-};
-
-// function addBtnFn(e) {
-//     let flag = setFlag();
-
-//     if (flag === 1) {  //flag == 1 means modal already created
-//         createModal();
-//     }
-
-//     document.querySelector("#form-heading").textContent = "Add a new task"
-//     document.querySelector("#submit").textContent = "Add Task"
-//     document.querySelector("#submit").opVal = "add"
-
-//     toggleClass();
-// }
 
 function submitFn(e) {
     e.preventDefault();
 
     let checkOp = document.querySelector("#submit").opVal;
-
     let formInputData = addFormData(checkOp, taskDetails);
-
     let data = JSON.parse(localStorage.getItem("data")) || [];
 
     if (checkOp == "add") {
@@ -292,60 +364,19 @@ function submitFn(e) {
         data.push(formInputData)
         localStorage.setItem("data", JSON.stringify(data));
     }
-    setTimeout(() => {
-        document.querySelector("#loading").classList.toggle("task-hidden")
-        let task = null;
-        createTaskOverviewElement(task, formInputData, document.querySelector("#task"))
-        toggleClass();
-        changeInput();
-    }, 0);
 
+    let task = null;
+    createTaskOverviewElement(task, formInputData, document.querySelector("#task"))
+    toggleClass();
+    changeInput();
+
+    popStateFlag = false;
 }
 
 function cancelFn(e) {
     e.preventDefault();
     toggleClass();
     changeInput();
-    // taskDetails = null;
-}
-
-// function taskFn(e) {
-//     let taskId = e.srcElement.taskId;
-//     taskDetails = JSON.parse(localStorage.getItem("data")).find((item) => item.id === taskId);
-
-//     let taskFlag = setTaskFlag();
-//     if (taskFlag == 1) {
-//         createTaskModal()
-//     }
-
-//     setTaskModal(taskDetails);
-//     document.querySelector("#task-display-modal").classList.toggle("task-hidden");
-//     document.querySelectorAll(".other")[0].classList.toggle("task-hidden");
-//     document.querySelectorAll(".other")[1].classList.toggle("task-hidden");
-//     document.querySelector("#task").classList.toggle("task-hidden");
-// }
-
-function editTaskFn(e) {
-    document.querySelector("#task-display-modal").classList.toggle("task-hidden");
-    document.querySelector("#modal").classList.toggle("task-hidden");
-    document.querySelector("#modal").classList.toggle("modal");
-
-    let flag = setFlag();
-    if (flag === 1) {  //flag == 1 means modal already created
-        createModal();
-    }
-
-    document.querySelector("#form-heading").textContent = "Edit Your Task"
-    document.querySelector("#submit").textContent = "Edit Task"
-    document.querySelector("#submit").opVal = "edit"
-
-    changeInput(taskDetails);
-}
-
-function backFn(e) {
-    document.querySelector("#task-display-modal").classList.toggle("task-hidden");
-    document.querySelectorAll(".other")[0].classList.toggle("task-hidden");
-    document.querySelectorAll(".other")[1].classList.toggle("task-hidden");
-    document.querySelector("#task").classList.toggle("task-hidden");
+    popStateFlag = false;
 }
 

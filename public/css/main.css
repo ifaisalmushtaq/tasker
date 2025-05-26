@@ -4,6 +4,7 @@
 * {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
 }
 
 body {
@@ -21,68 +22,195 @@ body {
 }
 
 .material-symbols-outlined {
-  font-variation-settings:
-  'FILL' 0,
-  'wght' 600,
-  'GRAD' 0,
-  'opsz' 40
+    background-color: rgb(10, 10, 10);
+    color: rgb(68, 67, 67);
+    font-size: 25px;
+    /* padding: 0.3rem; */
+    padding-top: 0.5rem;
+    font-variation-settings:
+        'FILL' 0,
+        'wght' 600,
+        'GRAD' 0,
+        'opsz' 40
+}
+
+.more {
+    padding-right: 0.5rem;
 }
 
 nav ul {
-    display:flex;
+    display: flex;
     justify-content: space-between;
     list-style-type: none;
-    margin: 1rem;
+    margin: 0.9rem;
 }
 
-nav li {
-    /* padding: 1rem 0rem 1rem 0rem; */
-    color: bisque;    
-}
+/*                FORM MODEL
+############################################
+############################################
+############################################ 
+*/
 
 .modal {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 90vw;
-    height: 90vh;
-    background-color: rgb(80, 79, 79);
-    border-radius: 15px;
+    width: 100vw;
+    height: 100vh;
     padding: auto;
     margin: auto;
-    margin-top: 2rem;
 }
 
-input,textarea,h1 {
-    margin: 1rem;
-    margin-bottom: 1rem;
-    width: 75vw;
-    min-height: 2rem;
-    border-radius: 8px;
-    border-color: rgb(172, 51, 51);
+.wrapper-top-1 {
+    height: 6vh;
+}
+
+.wrapper-top-2 {
+    height: 6vh;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    /* background-color: rgb(17, 17, 17); */
+    border-bottom: 0.01px solid rgb(58, 56, 56);
+}
+
+.wrapper-top-1 button,
+.wrapper-top-1 button span {
+    /* background-color: rgb(17, 17, 17); */
+}
+
+.priorty-date-wrapper {
+    width: 30vw;
+    display: flex;
+    justify-content: space-between;
+
+}
+
+.priorty-btn {
+    padding-right: 0.5rem;
+}
+
+.main-wrapper {
+    height: 89vh;
+    /* max-height: 88vh; */
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    overflow-y: scroll;
+}
+
+form input[type="text"] {
+    margin: 0rem;
+    width: 100vw;
+    min-height: 5vh;
+    padding: 0.8rem;
+    padding-top: 1.4rem;
+    padding-bottom: 0.2rem;
+    padding-left: 0.8rem;
     border: 0px;
-    resize: none;
-    padding: 0.5rem;
+    font-size: 22px;
+    font-weight: 500;
+    background-color: rgb(10, 10, 10);
+    color: rgb(215, 215, 215);
 }
 
-textarea {
-    height: 10rem;
+#editor {
+    width: 100vw;
+    flex-grow: 1;
+    border: 0px solid black;
+    padding: 0;
 }
 
-h1 {
-    margin-bottom: 3rem ;
+#editor .ql-editor {
+    padding: 0.8rem;
+    font-size: 16px;
 }
 
-#submit, #cancel, #back, #edit {
-    margin: 0.8rem;
-    margin-bottom: 1rem;
-    width: 5rem;
-    height: 2rem;
-    border-radius: 8px;
-    border: 0px;
-    padding: 0.5rem;
-    color: rgb(230, 234, 238);
-    background-color: rgb(30, 153, 153);
+#ql-toolbar {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    overflow-x: scroll;
+}
+
+#quill-toolbar {
+    padding: 0.6rem;
+    border: 0px solid black;
+}
+
+.ql-toolbar button svg {
+    width: 22px !important;
+    height: 22px !important;
+}
+
+#cancel {
+    padding-left: 1rem;
+    /* background-color: rgb(17, 17, 17); */
+    border: 0px solid black;
+}
+
+#date,
+#priorty {
+    position: fixed;
+    top: -1000px;
+}
+
+input:focus,
+textarea:focus {
+    outline: none;
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: rgb(102, 100, 100);
+}
+
+.final-outer-wrapper {
+    height: 6vh;
+    background-color: rgb(10, 10, 10);
+    width: 100vw;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    position: fixed;
+    bottom: 0;
+    border-top: 0.01px solid rgb(58, 56, 56);
+}
+
+.final-last-wrapper {
+    width: 65vw;
+    display: flex;
+    overflow-x: scroll;
+}
+
+.last-wrapper {
+    display: flex;
+    justify-content: space-between;
+}
+
+.last-wrapper .material-symbols-outlined {
+    padding-top: 0.1rem;
+    padding-left: 0.5rem;
+}
+
+.ql-editor {
+    color: rgb(215, 215, 215);
+}
+
+.ql-editor.ql-blank::before {
+    color: #888;
+
+}
+
+.more {
+    padding-right: 0.7rem;
+}
+
+form button {
+    background-color: rgb(10, 10, 10);
+    border: 0px solid black;
 }
 
 #add-btn {
@@ -102,106 +230,58 @@ h1 {
     background-color: rgb(255, 255, 255);
 }
 
+.task-manager {
+    padding: 0.3rem;
+    height: 88vh;
+    width: 100vw;
+}
+
 .task-id {
     padding: 0.3rem;
-    margin: 0.3rem;
-    /* height: 80vh; */
-    width: 90vw;
+    height: 88vh;
+    width: 100vw;
     display: flex;
+    flex-direction: row;
     justify-content: flex-start;
     align-items: flex-start;
     flex-wrap: wrap;
+    overflow-y: scroll;
 }
 
 .task {
-    width: fit-content;
-    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 45%;
+    min-height: 2rem;
     padding: 0.5rem;
     margin: 0.3rem;
     background-color: rgb(10, 10, 10);
     border-radius: 10px;
     border: 2px solid rgb(146, 142, 142);
     font-size: 13px;
+    color: rgb(215, 215, 215);
+}
+
+.task p {
+    white-space: normal;      /* Allow text to wrap */
+    overflow-wrap: break-word;/* Break long words if needed */
+    word-break: break-word;   /* Ensure long words break */
 }
 
 .task-hidden {
     display: none;
 }
 
-.task-display-modal {
-    width: 100vw;
-    height: 100vh;
-}
-
-.modal-inner-task {
-    width: 80vw;
-    height: 90vh;
-    padding: 1rem;
-    margin: auto;
-    margin-top: 1.5rem;
-    background-color: rgb(54, 54, 54);
-    border-radius: 10px ;
-    /* border: 2px solid rgb(146, 142, 142); */
-    overflow-x: hidden;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: space-between;
-    flex-wrap: wrap;
-}
-
-.modal-inner-task h1 {
-    margin: 0rem;
-    padding: 0rem;
-    font-size: 22px;
-}
-
-.modal-inner-task #task-creation-date {
-    font-size: 12px;
-    color: grey;
-}
-
-.modal-inner-task p {
-    height: 60vh;
-    min-width: 90%;
-    padding: 0.5rem;
-    border-radius: 5px;
-    border: 1px solid black;
-    overflow: scroll;
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-}
-
 .modal p::-webkit-scrollbar {
-  display: none;
-}
-
-.exp-wrapper {
-    margin: 0.5rem 0 0.5rem 0;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-}
-
-.exp-wrapper span {
-    font-size: 11px;
-    padding-right: 0.3rem;
+    display: none;
 }
 
 .dl {
     color: rgba(91, 46, 175, 0.459);
 }
 
-#edit {
-    padding: 0;
-    margin: 0.5rem 0 0.5rem 0;
-}
-
-#loading {
-    position: absolute;
-    top: 1rem;
-    left: 50%;
-}
 
 /* The Menu Modal starts From Here */
 /* ################################# */
@@ -248,8 +328,8 @@ h1 {
 }
 
 .menu-list .material-symbols-outlined {
-        font-size: 50px;
-        color: white;
+    font-size: 50px;
+    color: white;
 }
 
 menu a {
